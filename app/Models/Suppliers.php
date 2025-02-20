@@ -11,8 +11,13 @@ class Suppliers extends Model
     /** @use HasFactory<\Database\Factories\SuppliersFactory> */
     use HasFactory;
 
+    /** As we want to manupilate all the columns of the table, 
+     * rather than using $fillable = ['col_1', 'col_2'], 
+     * we use and leave $guarded = [] empty 
+     * */
     protected $guarded = [];
 
+    // Has Many Relationship
     public function product(): HasMany
 
     {

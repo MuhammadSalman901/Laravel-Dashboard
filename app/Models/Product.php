@@ -13,18 +13,25 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\ProductFactory> */
     use HasFactory;
 
+    /** As we want to manupilate all the columns of the table, 
+     * rather than using $fillable = ['col_1', 'col_2'], 
+     * we use and leave $guarded = [] empty 
+     * */
     protected $guarded = [];
-
+    
+    // Belongs to Relationship
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
-
+    
+    // Belongs to Relationship
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Suppliers::class, 'suppliers_id');
     }
 
+    // Has Many Relationship
     public function orderDetails(): HasMany 
     {
         return $this->hasMany(OrderDetail::class);

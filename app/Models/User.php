@@ -18,6 +18,11 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
+    /** As we want to manupilate all the columns of the table, 
+     * rather than using $fillable = ['col_1', 'col_2'], 
+     * we use and leave $guarded = [] empty 
+     * */ 
     protected $guarded = [];
 
     /**
@@ -44,11 +49,13 @@ class User extends Authenticatable
         ];
     }
 
+    // Has Many Relationship
     public function orderDetail(): HasMany
     {
         return $this->hasMany(OrderDetail::class);
     }
 
+    // Has Many Relationship
     public function salesOrder(): HasMany
     {
         return $this->hasMany(SalesOrder::class);
