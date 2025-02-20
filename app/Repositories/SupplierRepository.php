@@ -10,11 +10,13 @@ class SupplierRepository implements RepositoryInterface
 {
     protected $suppliers;
 
+    // constructor function
     public function __construct(Suppliers $suppliers)
     {
         $this->suppliers = $suppliers;
     }
 
+    // Get All function
     public function getAll()
     {
         $paginator = $this->suppliers->latest()->paginate(10);
@@ -26,21 +28,25 @@ class SupplierRepository implements RepositoryInterface
         return $paginator;
     }
 
+    // Find by specific id function
     public function findById($id, ?array $with=[])
     {
         return $this->suppliers->findOrFail($id);
     }
 
+    // create function
     public function create(array $data)
     {
         return $this->suppliers->create($data);
     }
 
+    // update function
     public function update($id, array $data)
     {
         return $this->suppliers->where('id', $id)->update($data);
     }
 
+    // delete function
     public function delete($id)
     {
         return $this->suppliers->destroy($id);

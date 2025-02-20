@@ -1,5 +1,8 @@
 <?php
-
+/** 
+ * The interfaces defines the functions that are implemented by multiple classes
+ * Here it is defining simple Crud functions
+ */
 namespace App\Repositories;
 
 interface RepositoryInterface

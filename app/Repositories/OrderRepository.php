@@ -10,11 +10,13 @@ class OrderRepository implements RepositoryInterface
 {
     protected $orders;
 
+    // constructor
     public function __construct(OrderDetail $orders)
     {
         $this->orders = $orders;
     }
 
+    // Get All function
     public function getAll()
     {
         $paginator = $this->orders->latest()->paginate(10);
@@ -26,6 +28,7 @@ class OrderRepository implements RepositoryInterface
         return $paginator;
     }
 
+    // Find by specific id function
     public function findById($id, ?array $with = [])
     {
         $query = $this->orders;
@@ -37,6 +40,7 @@ class OrderRepository implements RepositoryInterface
         return $query->findOrFail($id);
     }
 
+    // create function
     public function create(array $data)
     {
         return $this->orders->create([
@@ -49,11 +53,13 @@ class OrderRepository implements RepositoryInterface
         ]);
     }
 
+    // update function
     public function update($id, array $data)
     {
         return $this->orders->where('id', $id)->update($data);
     }
 
+    // delete function
     public function delete($id)
     {
         return $this->orders->destroy($id);

@@ -10,11 +10,13 @@ class CategoryRepository implements RepositoryInterface
 {
     protected $categories;
 
+    // Constructor
     public function __construct(Category $categories)
     {
         $this->categories = $categories;
     }
 
+    // Get All function
     public function getAll()
     {
         $paginator = $this->categories->latest()->paginate(10);
@@ -26,21 +28,25 @@ class CategoryRepository implements RepositoryInterface
         return $paginator;
     }
 
+    // Find by specific id function
     public function findById($id, ?array $with = [])
     {
         return $this->categories->findOrFail($id);
     }
 
+    // Create function
     public function create(array $data)
     {
         return $this->categories->create($data);
     }
 
+    // Update function
     public function update($id, array $data)
     {
         return $this->categories->where('id', $id)->update($data);
     }
 
+    // Delete function
     public function delete($id)
     {
         return $this->categories->destroy($id);
