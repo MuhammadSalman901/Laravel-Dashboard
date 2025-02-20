@@ -14,17 +14,20 @@ class SalesOrderController extends Controller
 {
     protected $salesorderService;
 
+    // Constructor for dependency injection of SalesOrderService
     public function __construct(SalesOrderService $salesorderService)
     {
         $this->salesorderService = $salesorderService;
     }
 
+    // Rendering the sales order listing page
     public function index()
     {
         $salesorders = $this->salesorderService->getAllsalesorders();
         return view('salesorder.index', ['salesorders' => $salesorders]);
     }
 
+    // Rendering the specific sales order details page
     public function show($id)
     {
         $salesorder = $this->salesorderService->getSalesOrderById($id);
@@ -34,6 +37,7 @@ class SalesOrderController extends Controller
         ]);
     }
 
+    // Initiating the create process and Rendering the sales order creation form
     public function create()
     {
         return view('salesorder.create', [
@@ -44,9 +48,10 @@ class SalesOrderController extends Controller
         ]);
     }
 
+    // Storing incoming sales order data from the form to the database
     public function store()
     {
-        // dd(request()->all());
+        // Backend validation of sales order attributes
         $validateAttributes = request()->validate([
             'ship_name' => ['required', 'min:3'],
             'ship_address' => ['required'],
@@ -60,16 +65,21 @@ class SalesOrderController extends Controller
             'shippers_id' => ['required', 'integer'],
         ]);
 
+        // Creating the sales order using the service layer
         $salesOrder = $this->salesorderService->createSalesOrder($validateAttributes);
 
+        // Redirecting to the order list creation page with the sales order ID
         return redirect()->route('order_list.create', ['sales_order_id' => $salesOrder->id])
             ->with('success', 'Sales Order created. Now add products.');
     }
 
+    // Searching sales order records based on input query
     public function search(Request $request)
     {
+        // Fetching the search input field
         $search = $request->input('search');
 
+        // Querying the database for matching sales order records
         $salesorders = SalesOrder::query()
             ->where(function ($query) use ($search) {
                 $query->where('ship_name', 'iLIKE', "%{$search}%")
@@ -79,17 +89,22 @@ class SalesOrderController extends Controller
             })
             ->paginate(10);
 
+        // Throwing an exception if no records are found
         if ($salesorders->isEmpty()) {
             abort(403, 'Record Not Found!!');
         }
 
+        // Rendering the sales order index page with search results
         return view('salesorder.index', ['salesorders' => $salesorders]);
     }
 
+    // Deleting a sales order record
     public function destroy($id)
     {
+        // Deleting the sales order using the service layer
         $this->salesorderService->deleteSalesOrder($id);
 
+        // Redirecting upon successful deletion
         return redirect()->route('sales_order.index')
             ->with('success', 'Sales Order deleted successfully');
     }

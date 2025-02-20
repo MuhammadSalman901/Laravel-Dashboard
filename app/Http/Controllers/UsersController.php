@@ -11,17 +11,20 @@ class UsersController extends Controller
 {
     protected $userService;
 
+    // Constructor for dependency injection of UserService
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
 
+    // Rendering the user listing page
     public function index()
     {
         $users = $this->userService->getAllusers();
         return view('user.index', ['users' => $users]);
     }
 
+    // Rendering the specific user details page
     public function show($id)
     {
         $user = $this->userService->getuserById($id);
@@ -31,14 +34,16 @@ class UsersController extends Controller
         ]);
     }
 
+    // Initiating the create process and Rendering the user creation form
     public function create()
     {
         return view('user.create');
     }
 
+    // Storing incoming user data from the form to the database
     public function store(Request $request)
     {
-        // dd(request()->all());
+        // Backend validation of user attributes
         $validated = $request->validate([
             'name' => ['required', 'min:3'],
             'title' => ['required', 'min:5'],
@@ -53,6 +58,7 @@ class UsersController extends Controller
             'bio' => ['required']
         ]);
 
+        // Processing skills array and image upload
         $validated['skills_input'] = implode(
             ',',
             array_filter(array_map('trim', $validated['skills_input']))
@@ -62,11 +68,14 @@ class UsersController extends Controller
             $validated['image_path'] = $request->file('image_path')->store('images', 'public');
         }
 
+        // Creating the user using the service layer
         $this->userService->createUser($validated);
 
+        // Redirecting upon successful storage
         return redirect()->route('user.index')->with('success', 'User created successfully');
     }
 
+    // Initiating the edit process and Rendering the user edit form
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -74,9 +83,10 @@ class UsersController extends Controller
         return view('user.edit', compact('user'));
     }
 
+    // Updating incoming user data from the form to the database
     public function update(Request $request, $id)
     {
-        // dd(request()->all());
+        // Backend validation of updated user attributes
         $validated = $request->validate([
             'name' => ['required', 'min:3'],
             'title' => ['required', 'min:5'],
@@ -91,11 +101,13 @@ class UsersController extends Controller
             'bio' => ['required']
         ]);
 
+        // Processing skills array and image upload
         $validated['skills_input'] = implode(
             ',',
             array_filter(array_map('trim', $validated['skills_input']))
         );
 
+        // Handling password hashing
         if (!empty($validated['password'])) {
             $validated['password'] = Hash::make($validated['password']);
         } else {
@@ -106,14 +118,20 @@ class UsersController extends Controller
             $validated['image_path'] = $request->file('image_path')->store('images', 'public');
         }
 
+        // Updating the user using the service layer
         $this->userService->editUser($id, $validated);
+
+        // Redirecting upon successful update
         return redirect()->route('user.index')->with('success', 'User updated successfully');
     }
 
+    // Searching user records based on input query
     public function search(Request $request)
     {
+        // Fetching the search input field
         $search = $request->input('search');
 
+        // Querying the database for matching user records
         $users = User::query()
             ->where(function ($query) use ($search) {
                 $query->where('name', 'iLIKE', "%{$search}%")
@@ -123,17 +141,22 @@ class UsersController extends Controller
             })
             ->paginate(10);
 
+        // Throwing an exception if no records are found
         if ($users->isEmpty()) {
             abort(403, 'Record Not Found!!');
         }
 
+        // Rendering the user index page with search results
         return view('user.index', ['users' => $users]);
     }
 
+    // Deleting a user record
     public function destroy($id)
     {
+        // Deleting the user using the service layer
         $this->userService->deleteUser($id);
 
+        // Redirecting upon successful deletion
         return redirect()->route('user.index')
             ->with('success', 'User deleted successfully');
     }

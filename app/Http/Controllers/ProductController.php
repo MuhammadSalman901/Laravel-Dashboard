@@ -7,23 +7,26 @@ use App\Services\ProductService;
 use App\Models\Category;
 use App\Models\Suppliers;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     protected $productService;
 
+    // Constructor for dependency injection of ProductService
     public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
     }
+
+    // Rendering the product listing page
     public function index()
     {
         $products = $this->productService->getAllproducts();
         return view('product.index', ['products' => $products]);
     }
 
+    // Rendering the specific product details page
     public function show($id)
     {
         $product = $this->productService->getproductById($id);
@@ -33,6 +36,7 @@ class ProductController extends Controller
         ]);
     }
 
+    // Initiating the create process and Rendering the product creation form
     public function create()
     {
         $userId = Auth::user()->id;
@@ -45,8 +49,10 @@ class ProductController extends Controller
         ]);
     }
 
+    // Storing incoming product data from the form to the database
     public function store()
     {
+        // Backend validation of product attributes
         $validateAttributes = request()->validate([
             'product_name' => ['required', 'min:3'],
             'quantity' => ['required'],
@@ -60,14 +66,15 @@ class ProductController extends Controller
             'category_id' => ['required', 'integer'],
         ]);
 
-        $validateAttributes['product_id'] = Auth::product()->id;
-
+        // Creating the product using the service layer
         $this->productService->createProduct($validateAttributes);
 
+        // Redirecting upon successful storage
         return redirect()->route('product.index')
             ->with('success', 'Product created successfully');
     }
 
+    // Initiating the edit process and Rendering the product edit form
     public function edit($id)
     {
         $products = $this->productService->getproductById($id);
@@ -80,8 +87,10 @@ class ProductController extends Controller
         ]);
     }
 
+    // Updating incoming product data from the form to the database
     public function update(Request $request, $id)
     {
+        // Backend validation of updated product attributes
         $validateAttributes = $request->validate([
             'product_name' => ['required', 'min:3'],
             'quantity' => ['required'],
@@ -94,16 +103,21 @@ class ProductController extends Controller
             'category_id' => ['required', 'integer'],
         ]);
 
+        // Updating the product using the service layer
         $this->productService->updateProduct($id, $validateAttributes);
 
+        // Redirecting upon successful update
         return redirect()->route('product.index')
             ->with('success', 'Product updated successfully');
     }
 
+    // Searching product records based on input query
     public function search(Request $request)
     {
+        // Fetching the search input field
         $search = $request->input('search');
 
+        // Querying the database for matching product records
         $products = Product::query()
             ->where(function ($query) use ($search) {
                 $query->where('product_name', 'iLIKE', "%{$search}%")
@@ -116,17 +130,22 @@ class ProductController extends Controller
             })
             ->paginate(10);
 
+        // Throwing an exception if no records are found
         if ($products->isEmpty()) {
             abort(403, 'Record Not Found!!');
         }
 
+        // Rendering the product index page with search results
         return view('product.index', ['products' => $products]);
     }
 
+    // Deleting a product record
     public function destroy($id)
     {
+        // Deleting the product using the service layer
         $this->productService->deleteProduct($id);
 
+        // Redirecting upon successful deletion
         return redirect()->route('product.index')
             ->with('success', 'Product deleted successfully');
     }
