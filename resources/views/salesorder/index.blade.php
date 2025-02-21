@@ -4,7 +4,7 @@
         <x-headerfooter.section-heading>Sales Orders</x-headerfooter.section-heading>
     </div>
 
-    <x-form.form-search name="sales_order.search" placeholder="Ship A" />
+    <x-form.form-search name="sales_order.search" reset="sales_order.index" placeholder="Ship A" />
 
     <div class="mt-10">
         <x-table.table>

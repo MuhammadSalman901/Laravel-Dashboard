@@ -3,7 +3,7 @@
     
     <x-headerfooter.section-header name="shipper.create" heading="Shippers" />
 
-    <x-form.form-search name="shipper.search" placeholder="Company A" />
+    <x-form.form-search name="shipper.search" reset="shipper.index" placeholder="Company A" />
 
     <div class="mt-10">
         <x-table.table>

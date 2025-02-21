@@ -3,7 +3,7 @@
     
     <x-headerfooter.section-header name="product.create" heading="Products" />
 
-    <x-form.form-search name="product.search" placeholder="Product B" />
+    <x-form.form-search name="product.search" reset="product.index" placeholder="Product B" />
 
     <div class="mt-10">
         <x-table.table>

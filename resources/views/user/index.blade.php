@@ -3,7 +3,7 @@
 
     <x-headerfooter.section-header name="user.create" heading="Users" />
 
-    <x-form.form-search name="user.search" placeholder="Jane Doe" />
+    <x-form.form-search name="user.search" reset="user.index" placeholder="Jane Doe" />
 
     <div class="mt-10">
         <x-table.table>
