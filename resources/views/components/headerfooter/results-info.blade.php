@@ -8,7 +8,7 @@
     @endif
 
     <div class="mt-1">
-        Showing {{ $resultInfo['start'] }} of
+        Showing {{ $resultInfo['end'] }} of
         {{ $resultInfo['total'] }} results
     </div>
 </div>
