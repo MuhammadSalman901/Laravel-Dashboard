@@ -6,6 +6,10 @@
 
     <x-form.form-search name="sales_order.search" reset="sales_order.index" placeholder="Ship A" />
 
+    @isset($resultInfo)
+    <x-headerfooter.results-info :resultInfo="$resultInfo" />
+    @endisset
+
     <div class="mt-10">
         <x-table.table>
             <x-slot name="headers">

@@ -103,6 +103,7 @@ class ShippersController extends Controller
     {
         // Fetching the search input field
         $search = $request->input('search');
+        $perPage = 10; // Match pagination count
 
         // Querying the database for matching shipper records
         $shippers = Shippers::query()
@@ -110,15 +111,23 @@ class ShippersController extends Controller
                 $query->where('company_name', 'iLIKE', "%{$search}%")
                     ->orWhere('phone', 'iLIKE', "%{$search}%");
             })
-            ->paginate(10);
+            ->paginate($perPage);
 
-        // Check if no records are found
-        $noRecordsFound = $shippers->isEmpty();
+        // Calculate result range
+        $total = $shippers->total();
+        $currentPage = $shippers->currentPage();
+        $start = ($currentPage - 1) * $perPage + 1;
+        $end = min($currentPage * $perPage, $total);
 
-        // Rendering the shipper index page with search results
         return view('shipper.index', [
             'shippers' => $shippers,
-            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+            'resultInfo' => [
+                'total' => $total,
+                'start' => $start,
+                'end' => $end,
+                'searchTerm' => $search
+            ],
+            'noRecordsFound' => $shippers->isEmpty()
         ]);
     }
 

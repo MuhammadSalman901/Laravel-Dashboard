@@ -114,26 +114,36 @@ class CategoryController extends Controller
         return redirect()->route('category.index');
     }
 
-    // Search function
+    // Searching category records based on input query
     public function search(Request $request)
     {
         // Fetching the search input field
         $search = $request->input('search');
+        $perPage = 10; // Match pagination count
 
-        // Using the query() function we can send a search query to match data with db and reteirve it 
+        // Querying the database for matching category records
         $categories = Category::query()
             ->where(function ($query) use ($search) {
-                $query->where('category_name', 'iLIKE', "%{$search}%")  // 'iLIKE' lets you mtach exact data word by word (If you want to add case sensitivity, you can just use 'LIKE')
-                    ->orWhere('description', 'iLIKE', "%{$search}%");   // And if we do not want exact matching, you can send the query back without 'LIKE' or 'iLIKE' keyword
+                $query->where('category_name', 'iLIKE', "%{$search}%")  // Case-insensitive search
+                    ->orWhere('description', 'iLIKE', "%{$search}%");   // Partial match in description
             })
-            ->paginate(10);
+            ->paginate($perPage);
 
-        // Check if no records are found
-        $noRecordsFound = $categories->isEmpty();
+        // Calculate result range
+        $total = $categories->total();
+        $currentPage = $categories->currentPage();
+        $start = ($currentPage - 1) * $perPage + 1;
+        $end = min($currentPage * $perPage, $total);
 
         return view('category.index', [
             'categories' => $categories,
-            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+            'resultInfo' => [
+                'total' => $total,
+                'start' => $start,
+                'end' => $end,
+                'searchTerm' => $search
+            ],
+            'noRecordsFound' => $categories->isEmpty() // No records flag
         ]);
     }
 

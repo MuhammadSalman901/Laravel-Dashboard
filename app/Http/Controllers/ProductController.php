@@ -125,6 +125,7 @@ class ProductController extends Controller
     {
         // Fetching the search input field
         $search = $request->input('search');
+        $perPage = 10; // Match pagination count
 
         // Querying the database for matching product records
         $products = Product::query()
@@ -137,15 +138,23 @@ class ProductController extends Controller
                     ->orWhere('discontinued', 'iLIKE', "%{$search}%")
                     ->orWhere('units_in_stock', 'iLIKE', "%{$search}%");
             })
-            ->paginate(10);
+            ->paginate($perPage);
 
-        // Check if no records are found
-        $noRecordsFound = $products->isEmpty();
+        // Calculate result range
+        $total = $products->total();
+        $currentPage = $products->currentPage();
+        $start = ($currentPage - 1) * $perPage + 1;
+        $end = min($currentPage * $perPage, $total);
 
-        // Rendering the product index page with search results
         return view('product.index', [
             'products' => $products,
-            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+            'resultInfo' => [
+                'total' => $total,
+                'start' => $start,
+                'end' => $end,
+                'searchTerm' => $search
+            ],
+            'noRecordsFound' => $products->isEmpty()
         ]);
     }
 

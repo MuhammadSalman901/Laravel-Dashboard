@@ -5,6 +5,10 @@
 
     <x-form.form-search name="order_list.search" reset="order_list.index" placeholder="5" />
 
+    @isset($resultInfo)
+    <x-headerfooter.results-info :resultInfo="$resultInfo" />
+    @endisset
+
     <div class="mt-10">
         <x-table.table>
             <x-slot name="headers">

@@ -111,6 +111,7 @@ class SuppliersController extends Controller
     {
         // Fetching the search input field
         $search = $request->input('search');
+        $perPage = 10; // Match pagination count
 
         // Querying the database for matching supplier records
         $suppliers = Suppliers::query()
@@ -121,15 +122,23 @@ class SuppliersController extends Controller
                     ->orWhere('phone', 'iLIKE', "%{$search}%")
                     ->orWhere('contact_title', 'iLIKE', "%{$search}%");
             })
-            ->paginate(10);
+            ->paginate($perPage);
 
-        // Check if no records are found
-        $noRecordsFound = $suppliers->isEmpty();
+        // Calculate result range
+        $total = $suppliers->total();
+        $currentPage = $suppliers->currentPage();
+        $start = ($currentPage - 1) * $perPage + 1;
+        $end = min($currentPage * $perPage, $total);
 
-        // Rendering the supplier index page with search results
         return view('supplier.index', [
             'suppliers' => $suppliers,
-            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+            'resultInfo' => [
+                'total' => $total,
+                'start' => $start,
+                'end' => $end,
+                'searchTerm' => $search
+            ],
+            'noRecordsFound' => $suppliers->isEmpty()
         ]);
     }
 

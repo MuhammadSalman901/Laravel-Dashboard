@@ -5,6 +5,10 @@
 
     <x-form.form-search name="shipper.search" reset="shipper.index" placeholder="Company A" />
 
+    @isset($resultInfo)
+    <x-headerfooter.results-info :resultInfo="$resultInfo" />
+    @endisset
+
     <div class="mt-10">
         <x-table.table>
             <x-slot name="headers">

@@ -82,6 +82,7 @@ class SalesOrderController extends Controller
     {
         // Fetching the search input field
         $search = $request->input('search');
+        $perPage = 10; // Match pagination count
 
         // Querying the database for matching sales order records
         $salesorders = SalesOrder::query()
@@ -91,15 +92,23 @@ class SalesOrderController extends Controller
                     ->orWhere('ship_city', 'iLIKE', "%{$search}%")
                     ->orWhere('ship_country', 'iLIKE', "%{$search}%");
             })
-            ->paginate(10);
+            ->paginate($perPage);
 
-        // Check if no records are found
-        $noRecordsFound = $salesorders->isEmpty();
+        // Calculate result range
+        $total = $salesorders->total();
+        $currentPage = $salesorders->currentPage();
+        $start = ($currentPage - 1) * $perPage + 1;
+        $end = min($currentPage * $perPage, $total);
 
-        // Rendering the sales order index page with search results
         return view('salesorder.index', [
             'salesorders' => $salesorders,
-            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+            'resultInfo' => [
+                'total' => $total,
+                'start' => $start,
+                'end' => $end,
+                'searchTerm' => $search
+            ],
+            'noRecordsFound' => $salesorders->isEmpty()
         ]);
     }
 

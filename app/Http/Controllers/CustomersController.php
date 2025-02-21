@@ -112,6 +112,7 @@ class CustomersController extends Controller
     {
         // Fetching the search input field
         $search = $request->input('search');
+        $perPage = 10; // Match pagination count
 
         // Querying the database for matching customer records
         $customers = Customers::query()
@@ -122,19 +123,24 @@ class CustomersController extends Controller
                     ->orWhere('phone', 'iLIKE', "%{$search}%")
                     ->orWhere('contact_title', 'iLIKE', "%{$search}%");
             })
-            ->paginate(10);
+            ->paginate($perPage);
 
-        // Check if no records are found
-        $noRecordsFound = $customers->isEmpty();
+        // Calculate result range
+        $total = $customers->total();
+        $currentPage = $customers->currentPage();
+        $start = ($currentPage - 1) * $perPage + 1;
+        $end = min($currentPage * $perPage, $total);
 
-
-        // Rendering the customer index page with search results
-        return view(
-            'customer.index',
-            [
-                'customers' => $customers,
-                'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
-            ]);
+        return view('customer.index', [
+            'customers' => $customers,
+            'resultInfo' => [
+                'total' => $total,
+                'start' => $start,
+                'end' => $end,
+                'searchTerm' => $search
+            ],
+            'noRecordsFound' => $customers->isEmpty()
+        ]);
     }
 
     // Deleting a customer record

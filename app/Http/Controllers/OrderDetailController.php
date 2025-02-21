@@ -102,6 +102,7 @@ class OrderDetailController extends Controller
     {
         // Fetching the search input field
         $search = $request->input('search');
+        $perPage = 10; // Match pagination count
 
         // Querying the database for matching order records
         $orders = OrderDetail::query()
@@ -111,15 +112,23 @@ class OrderDetailController extends Controller
                     ->orWhere('price', 'iLIKE', "%{$search}%")
                     ->orWhere('discount', 'iLIKE', "%{$search}%");
             })
-            ->paginate(10);
+            ->paginate($perPage);
 
-        // Check if no records are found
-        $noRecordsFound = $orders->isEmpty();
+        // Calculate result range
+        $total = $orders->total();
+        $currentPage = $orders->currentPage();
+        $start = ($currentPage - 1) * $perPage + 1;
+        $end = min($currentPage * $perPage, $total);
 
-        // Rendering the order index page with search results
         return view('order.index', [
             'orders' => $orders,
-            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+            'resultInfo' => [
+                'total' => $total,
+                'start' => $start,
+                'end' => $end,
+                'searchTerm' => $search
+            ],
+            'noRecordsFound' => $orders->isEmpty()
         ]);
     }
 }

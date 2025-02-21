@@ -139,10 +139,9 @@ class UsersController extends Controller
     // Searching user records based on input query
     public function search(Request $request)
     {
-        // Fetching the search input field
         $search = $request->input('search');
+        $perPage = 10; // Match your pagination count
 
-        // Querying the database for matching user records
         $users = User::query()
             ->where(function ($query) use ($search) {
                 $query->where('name', 'iLIKE', "%{$search}%")
@@ -150,15 +149,23 @@ class UsersController extends Controller
                     ->orWhere('phone', 'iLIKE', "%{$search}%")
                     ->orWhere('title', 'iLIKE', "%{$search}%");
             })
-            ->paginate(10);
+            ->paginate($perPage);
 
-        // Check if no records are found
-        $noRecordsFound = $users->isEmpty();
+        // Calculate result range
+        $total = $users->total();
+        $currentPage = $users->currentPage();
+        $start = ($currentPage - 1) * $perPage + 1;
+        $end = min($currentPage * $perPage, $total);
 
-        // Rendering the user index page with search results
         return view('user.index', [
             'users' => $users,
-            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+            'resultInfo' => [
+                'total' => $total,
+                'start' => $start,
+                'end' => $end,
+                'searchTerm' => $search
+            ],
+            'noRecordsFound' => $users->isEmpty()
         ]);
     }
 
