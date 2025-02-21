@@ -3,7 +3,7 @@
 
     <x-headerfooter.section-heading>Orders</x-headerfooter.section-heading>
 
-    <x-form.form-search name="order_list.search" reset="order.index" placeholder="5" />
+    <x-form.form-search name="order_list.search" reset="order_list.index" placeholder="5" />
 
     <div class="mt-10">
         <x-table.table>
