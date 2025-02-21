@@ -21,7 +21,12 @@ class SuppliersController extends Controller
     public function index()
     {
         $suppliers = $this->supplierService->getAllsuppliers();
-        return view('supplier.index', ['suppliers' => $suppliers]);
+        $noRecordsFound = false;
+
+        return view('supplier.index', [
+            'suppliers' => $suppliers,
+            'noRecordsFound' => $noRecordsFound,
+        ]);
     }
 
     // Rendering the specific supplier details page
@@ -118,13 +123,14 @@ class SuppliersController extends Controller
             })
             ->paginate(10);
 
-        // Throwing an exception if no records are found
-        if ($suppliers->isEmpty()) {
-            abort(403, 'Record Not Found!!');
-        }
+        // Check if no records are found
+        $noRecordsFound = $suppliers->isEmpty();
 
         // Rendering the supplier index page with search results
-        return view('supplier.index', ['suppliers' => $suppliers]);
+        return view('supplier.index', [
+            'suppliers' => $suppliers,
+            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+        ]);
     }
 
     // Deleting a supplier record

@@ -23,7 +23,12 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->productService->getAllproducts();
-        return view('product.index', ['products' => $products]);
+        $noRecordsFound = false;
+
+        return view('product.index', [
+            'products' => $products,
+            'noRecordsFound' => $noRecordsFound,
+        ]);
     }
 
     // Rendering the specific product details page
@@ -134,13 +139,14 @@ class ProductController extends Controller
             })
             ->paginate(10);
 
-        // Throwing an exception if no records are found
-        if ($products->isEmpty()) {
-            abort(403, 'Record Not Found!!');
-        }
+        // Check if no records are found
+        $noRecordsFound = $products->isEmpty();
 
         // Rendering the product index page with search results
-        return view('product.index', ['products' => $products]);
+        return view('product.index', [
+            'products' => $products,
+            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+        ]);
     }
 
     // Deleting a product record

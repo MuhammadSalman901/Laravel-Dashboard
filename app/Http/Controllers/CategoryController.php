@@ -22,7 +22,12 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = $this->categoriesService->getAllcategories();
-        return view('category.index', ['categories' => $categories]);
+        $noRecordsFound = false;
+
+        return view('category.index', [
+            'categories' => $categories,
+            'noRecordsFound' => $noRecordsFound,
+        ]);
     }
 
     // Rendering the specific id page
@@ -123,12 +128,13 @@ class CategoryController extends Controller
             })
             ->paginate(10);
 
-        // Throwing an exception upon not retrieving a record   
-        if ($categories->isEmpty()) {
-            abort(403, 'Record Not Found!!');
-        }
+        // Check if no records are found
+        $noRecordsFound = $categories->isEmpty();
 
-        return view('category.index', ['categories' => $categories]);
+        return view('category.index', [
+            'categories' => $categories,
+            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+        ]);
     }
 
     // Delete function

@@ -1,6 +1,6 @@
 <x-layout>
     <x-flash.flash-card />
-    
+
     <x-headerfooter.section-header name="shipper.create" heading="Shippers" />
 
     <x-form.form-search name="shipper.search" reset="shipper.index" placeholder="Company A" />
@@ -22,6 +22,10 @@
                 </x-table.table-row-data>
             </x-table.table-row>
             @endforeach
+
+            @if ($noRecordsFound)
+            <x-table.record message="Shipper Not Found!!!" />
+            @endif
         </x-table.table>
     </div>
 

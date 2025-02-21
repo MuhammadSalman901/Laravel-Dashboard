@@ -27,6 +27,10 @@
                 </x-table.table-row-data>
             </x-table.table-row>
             @endforeach
+
+            @if ($noRecordsFound)
+            <x-table.record message="Sales Order Not Found!!!" />
+            @endif
         </x-table.table>
     </div>
 

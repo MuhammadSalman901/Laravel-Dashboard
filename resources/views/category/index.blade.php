@@ -1,9 +1,9 @@
 <x-layout>
     <x-flash.flash-card />
-    
+
     <x-headerfooter.section-header name="category.create" heading="Categories" />
 
-    <x-form.form-search name="category.search" placeholder="Food" />
+    <x-form.form-search name="category.search" reset="category.index" placeholder="Food" />
 
     <div class="mt-10">
         <x-table.table>
@@ -24,6 +24,10 @@
                 </x-table.table-row-data>
             </x-table.table-row>
             @endforeach
+
+            @if ($noRecordsFound)
+            <x-table.record message="Category Not Found!!!" />
+            @endif
         </x-table.table>
     </div>
 
@@ -31,4 +35,3 @@
         <x-navigation.paginator :module="$categories" />
     </div>
 </x-layout>
-

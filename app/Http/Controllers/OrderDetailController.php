@@ -26,7 +26,12 @@ class OrderDetailController extends Controller
     public function index()
     {
         $orders = $this->orderService->getAllorders();
-        return view('order.index', ['orders' => $orders]);
+        $noRecordsFound = false;
+
+        return view('order.index', [
+            'orders' => $orders,
+            'noRecordsFound' => $noRecordsFound,
+        ]);
     }
 
     // Rendering the specific order details page with related data
@@ -108,12 +113,13 @@ class OrderDetailController extends Controller
             })
             ->paginate(10);
 
-        // Throwing an exception if no records are found
-        if ($orders->isEmpty()) {
-            abort(403, 'Record Not Found!!');
-        }
+        // Check if no records are found
+        $noRecordsFound = $orders->isEmpty();
 
         // Rendering the order index page with search results
-        return view('order.index', ['orders' => $orders]);
+        return view('order.index', [
+            'orders' => $orders,
+            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+        ]);
     }
 }

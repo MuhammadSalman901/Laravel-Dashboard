@@ -21,7 +21,12 @@ class UsersController extends Controller
     public function index()
     {
         $users = $this->userService->getAllusers();
-        return view('user.index', ['users' => $users]);
+        $noRecordsFound = false;
+
+        return view('user.index', [
+            'users' => $users,
+            'noRecordsFound' => $noRecordsFound,
+        ]);
     }
 
     // Rendering the specific user details page
@@ -147,13 +152,14 @@ class UsersController extends Controller
             })
             ->paginate(10);
 
-        // Throwing an exception if no records are found
-        if ($users->isEmpty()) {
-            abort(403, 'Record Not Found!!');
-        }
+        // Check if no records are found
+        $noRecordsFound = $users->isEmpty();
 
         // Rendering the user index page with search results
-        return view('user.index', ['users' => $users]);
+        return view('user.index', [
+            'users' => $users,
+            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+        ]);
     }
 
     // Deleting a user record

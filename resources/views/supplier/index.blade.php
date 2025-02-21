@@ -1,6 +1,6 @@
 <x-layout>
     <x-flash.flash-card />
-    
+
     <x-headerfooter.section-header name="supplier.create" heading="Suppliers" />
 
     <x-form.form-search name="supplier.search" reset="supplier.index" placeholder="Supplier A" />
@@ -30,6 +30,10 @@
                 </x-table.table-row-data>
             </x-table.table-row>
             @endforeach
+
+            @if ($noRecordsFound)
+            <x-table.record message="Supplier Not Found!!!" />
+            @endif
         </x-table.table>
     </div>
 

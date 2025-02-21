@@ -24,7 +24,12 @@ class SalesOrderController extends Controller
     public function index()
     {
         $salesorders = $this->salesorderService->getAllsalesorders();
-        return view('salesorder.index', ['salesorders' => $salesorders]);
+        $noRecordsFound = false;
+
+        return view('salesorder.index', [
+            'salesorders' => $salesorders,
+            'noRecordsFound' => $noRecordsFound,
+        ]);
     }
 
     // Rendering the specific sales order details page
@@ -88,13 +93,14 @@ class SalesOrderController extends Controller
             })
             ->paginate(10);
 
-        // Throwing an exception if no records are found
-        if ($salesorders->isEmpty()) {
-            abort(403, 'Record Not Found!!');
-        }
+        // Check if no records are found
+        $noRecordsFound = $salesorders->isEmpty();
 
         // Rendering the sales order index page with search results
-        return view('salesorder.index', ['salesorders' => $salesorders]);
+        return view('salesorder.index', [
+            'salesorders' => $salesorders,
+            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+        ]);
     }
 
     // Deleting a sales order record

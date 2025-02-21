@@ -22,7 +22,12 @@ class CustomersController extends Controller
     public function index()
     {
         $customers = $this->customerService->getAllcustomers();
-        return view('customer.index', ['customers' => $customers]);
+        $noRecordsFound = false;
+
+        return view('customer.index', [
+            'customers' => $customers,
+            'noRecordsFound' => $noRecordsFound,
+        ]);
     }
 
     // Rendering the specific customer details page
@@ -119,13 +124,17 @@ class CustomersController extends Controller
             })
             ->paginate(10);
 
-        // Throwing an exception if no records are found
-        if ($customers->isEmpty()) {
-            abort(403, 'Record Not Found!!');
-        }
+        // Check if no records are found
+        $noRecordsFound = $customers->isEmpty();
+
 
         // Rendering the customer index page with search results
-        return view('customer.index', ['customers' => $customers]);
+        return view(
+            'customer.index',
+            [
+                'customers' => $customers,
+                'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+            ]);
     }
 
     // Deleting a customer record

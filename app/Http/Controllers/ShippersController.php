@@ -21,7 +21,12 @@ class ShippersController extends Controller
     public function index()
     {
         $shippers = $this->shipperService->getAllshippers();
-        return view('shipper.index', ['shippers' => $shippers]);
+        $noRecordsFound = false;
+
+        return view('shipper.index', [
+            'shippers' => $shippers,
+            'noRecordsFound' => $noRecordsFound,
+        ]);
     }
 
     // Rendering the specific shipper details page
@@ -107,13 +112,14 @@ class ShippersController extends Controller
             })
             ->paginate(10);
 
-        // Throwing an exception if no records are found
-        if ($shippers->isEmpty()) {
-            abort(403, 'Record Not Found!!');
-        }
+        // Check if no records are found
+        $noRecordsFound = $shippers->isEmpty();
 
         // Rendering the shipper index page with search results
-        return view('shipper.index', ['shippers' => $shippers]);
+        return view('shipper.index', [
+            'shippers' => $shippers,
+            'noRecordsFound' => $noRecordsFound, // Pass this flag to the view to append no records found
+        ]);
     }
 
     // Deleting a shipper record

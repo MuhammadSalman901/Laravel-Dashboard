@@ -1,6 +1,6 @@
 <x-layout>
     <x-flash.flash-card />
-    
+
     <x-headerfooter.section-header name="product.create" heading="Products" />
 
     <x-form.form-search name="product.search" reset="product.index" placeholder="Product B" />
@@ -32,6 +32,10 @@
                 </x-table.table-row-data>
             </x-table.table-row>
             @endforeach
+
+            @if ($noRecordsFound)
+            <x-table.record message="Product Not Found!!!" />
+            @endif
         </x-table.table>
     </div>
 
