@@ -69,8 +69,7 @@ class SalesOrderController extends Controller
         $salesOrder = $this->salesorderService->createSalesOrder($validateAttributes);
 
         // Redirecting to the order list creation page with the sales order ID
-        return redirect()->route('order_list.create', ['sales_order_id' => $salesOrder->id])
-            ->with('success', 'Sales Order created. Now add products.');
+        return redirect()->route('order_list.create', ['sales_order_id' => $salesOrder->id]);
     }
 
     // Searching sales order records based on input query

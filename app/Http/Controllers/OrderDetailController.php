@@ -85,9 +85,11 @@ class OrderDetailController extends Controller
             ]);
         }
 
+        // Session Message
+        session()->flash('success', 'Order Created Successfully');
+
         // Redirecting upon successful storage
-        return redirect()->route('order_list.index')
-            ->with('success', 'Order details added successfully.');
+        return redirect()->route('order_list.index');
     }
 
     // Searching order records based on input query

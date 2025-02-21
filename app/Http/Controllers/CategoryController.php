@@ -48,12 +48,13 @@ class CategoryController extends Controller
     // Storing incoming data from form to db
     public function store(Request $request)
     {
+        // dd(request()->all());
         // Backend validation of attributes
         $validateAttributes = request()->validate([
+            'user_id' => ['required', 'integer'],
             'category_name' => ['required', 'min:3'],
             'description' => ['required'],
             'image_path' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
-            'category_id' => ['required', 'integer']
         ]);
 
         // Handling file type data
@@ -65,9 +66,11 @@ class CategoryController extends Controller
 
         $this->categoriesService->createCategory($validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Category Created Successfully');
+
         // Redirecting upon successful storage 
-        return redirect()->route('category.index')
-            ->with('success', 'category created successfully');
+        return redirect()->route('category.index');
     }
 
     // Initiating the edit process and Rendering the edit form
@@ -99,9 +102,11 @@ class CategoryController extends Controller
 
         $this->categoriesService->updateCategory($id, $validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Category Updated Successfully');
+
         // Redirecting upon successful update
-        return redirect()->route('category.index')
-            ->with('success', 'category updated successfully');
+        return redirect()->route('category.index');
     }
 
     // Search function

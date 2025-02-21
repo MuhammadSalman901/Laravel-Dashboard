@@ -1,4 +1,5 @@
 <x-layout>
+
     <div class="px-5">
         <x-headerfooter.section-heading>Sales Orders</x-headerfooter.section-heading>
     </div>

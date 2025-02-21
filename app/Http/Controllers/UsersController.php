@@ -71,8 +71,11 @@ class UsersController extends Controller
         // Creating the user using the service layer
         $this->userService->createUser($validated);
 
+        // Session Message
+        session()->flash('success', 'User Created Successfully');
+
         // Redirecting upon successful storage
-        return redirect()->route('user.index')->with('success', 'User created successfully');
+        return redirect()->route('user.index');
     }
 
     // Initiating the edit process and Rendering the user edit form
@@ -120,6 +123,9 @@ class UsersController extends Controller
 
         // Updating the user using the service layer
         $this->userService->editUser($id, $validated);
+
+        // Session Message
+        session()->flash('success', 'User Updated Successfully');
 
         // Redirecting upon successful update
         return redirect()->route('user.index')->with('success', 'User updated successfully');

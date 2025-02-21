@@ -57,9 +57,11 @@ class ShippersController extends Controller
         // Creating the shipper using the service layer
         $this->shipperService->createShipper($validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Shippers Created Successfully');
+
         // Redirecting upon successful storage
-        return redirect()->route('shipper.index')
-            ->with('success', 'shipper created successfully');
+        return redirect()->route('shipper.index');
     }
 
     // Initiating the edit process and Rendering the shipper edit form
@@ -84,9 +86,11 @@ class ShippersController extends Controller
         // Updating the shipper using the service layer
         $this->shipperService->updateShipper($id, $validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Shipper Updated Successfully');
+
         // Redirecting upon successful update
-        return redirect()->route('shipper.index')
-            ->with('success', 'Shipper updated successfully');
+        return redirect()->route('shipper.index');
     }
 
     // Searching shipper records based on input query

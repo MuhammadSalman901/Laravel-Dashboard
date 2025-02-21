@@ -62,9 +62,11 @@ class CustomersController extends Controller
         // Creating the customer using the service layer
         $this->customerService->createCustomer($validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Customer Created Successfully');
+
         // Redirecting upon successful storage
-        return redirect()->route('customer.index')
-            ->with('success', 'Customer created successfully');
+        return redirect()->route('customer.index');
     }
 
     // Initiating the edit process and Rendering the customer edit form
@@ -93,9 +95,11 @@ class CustomersController extends Controller
         // Updating the customer using the service layer
         $this->customerService->updateCustomer($id, $validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Customer Updated Successfully');
+
         // Redirecting upon successful update
-        return redirect()->route('customer.index')
-            ->with('success', 'Customer updated successfully');
+        return redirect()->route('customer.index');
     }
 
     // Searching customer records based on input query

@@ -1,5 +1,6 @@
 <x-layout>
-
+    <x-flash.flash-card />
+    
     <x-headerfooter.section-header name="supplier.create" heading="Suppliers" />
 
     <x-form.form-search name="supplier.search" placeholder="Supplier A" />

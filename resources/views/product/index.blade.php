@@ -1,5 +1,6 @@
 <x-layout>
-
+    <x-flash.flash-card />
+    
     <x-headerfooter.section-header name="product.create" heading="Products" />
 
     <x-form.form-search name="product.search" placeholder="Product B" />

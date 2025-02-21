@@ -61,9 +61,11 @@ class SuppliersController extends Controller
         // Creating the supplier using the service layer
         $this->supplierService->createSupplier($validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Supplier Created Successfully');
+
         // Redirecting upon successful storage
-        return redirect()->route('supplier.index')
-            ->with('success', 'supplier created successfully');
+        return redirect()->route('supplier.index');
     }
 
     // Initiating the edit process and Rendering the supplier edit form
@@ -92,9 +94,11 @@ class SuppliersController extends Controller
         // Updating the supplier using the service layer
         $this->supplierService->updateSupplier($id, $validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Supplier Updated Successfully');
+
         // Redirecting upon successful update
-        return redirect()->route('supplier.index')
-            ->with('success', 'supplier updated successfully');
+        return redirect()->route('supplier.index');
     }
 
     // Searching supplier records based on input query

@@ -1,6 +1,6 @@
-<div class="flex justify-between items-center px-5">
+<div class="flex justify-between items-center">
     <x-headerfooter.section-heading>{{ $heading }}</x-headerfooter.section-heading>
     <a href="{{ route($name) }}">
-        <x-button.button class="mt-[20vh]">Create</x-button.button>
+        <x-button.button class="mt-[15vh]">Create</x-button.button>
     </a>
 </div>

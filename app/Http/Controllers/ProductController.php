@@ -69,9 +69,11 @@ class ProductController extends Controller
         // Creating the product using the service layer
         $this->productService->createProduct($validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Product Created Successfully');
+
         // Redirecting upon successful storage
-        return redirect()->route('product.index')
-            ->with('success', 'Product created successfully');
+        return redirect()->route('product.index');
     }
 
     // Initiating the edit process and Rendering the product edit form
@@ -106,9 +108,11 @@ class ProductController extends Controller
         // Updating the product using the service layer
         $this->productService->updateProduct($id, $validateAttributes);
 
+        // Session Message
+        session()->flash('success', 'Product Updated Successfully');
+
         // Redirecting upon successful update
-        return redirect()->route('product.index')
-            ->with('success', 'Product updated successfully');
+        return redirect()->route('product.index');
     }
 
     // Searching product records based on input query

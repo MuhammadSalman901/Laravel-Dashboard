@@ -1,4 +1,6 @@
 <x-layout>
+    <x-flash.flash-card />
+
     <x-headerfooter.section-header name="customer.create" heading="Customers" />
 
     <x-form.form-search name="customer.search" placeholder="Sonny Ferry" />

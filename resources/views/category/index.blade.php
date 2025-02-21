@@ -1,4 +1,6 @@
 <x-layout>
+    <x-flash.flash-card />
+    
     <x-headerfooter.section-header name="category.create" heading="Categories" />
 
     <x-form.form-search name="category.search" placeholder="Food" />
@@ -29,3 +31,4 @@
         <x-navigation.paginator :module="$categories" />
     </div>
 </x-layout>
+

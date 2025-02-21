@@ -1,4 +1,6 @@
 <x-layout>
+    <x-flash.flash-card />
+
     <x-headerfooter.section-heading>Orders</x-headerfooter.section-heading>
 
     <x-form.form-search name="order_list.search" placeholder="5" />
